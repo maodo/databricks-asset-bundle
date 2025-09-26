@@ -1,0 +1,63 @@
+# This is a Databricks asset bundle definition for dab_test.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+bundle:
+  name: dab_test
+  uuid: 0eb8fa21-280b-4dfc-996a-96ff2b9b10f8
+
+artifacts:
+  python_artifact:
+    type: whl
+    build: uv build --wheel
+
+include:
+  - resources/notebook_job_multi_env.yml
+  #- resources/*/*.yml
+
+variables:
+  my_lab_user_name:
+    description: "Lab User Name"
+    default: dbacademy
+  
+  catalog_dev:
+    default: ${var.my_lab_user_name}_1_dev
+  
+  catalog_prod:
+    default: ${var.my_lab_user_name}_3_prod
+  
+  target_catalog:
+    description: "Target catalog dev by default"
+    default: ${var.catalog_dev}
+  
+  raw_data_path:
+    default: /Volumes/${var.target_catalog}/default/health
+
+targets:
+  dev:
+    presets:
+      name_prefix: "dev_${workspace.current_user.short_name}_"
+      source_linked_deployment: false
+      tags:
+        department: IT
+        environment: DEV
+    mode: development
+    default: true
+    workspace:
+      host: https://dbc-3ca66a4e-75a6.cloud.databricks.com
+
+  prod:
+    presets:
+      name_prefix: "prd_${workspace.current_user.short_name}_"
+      source_linked_deployment: false
+      tags:
+        department: IT
+        environment: PROD
+    mode: production
+    workspace:
+      host: https://dbc-3ca66a4e-75a6.cloud.databricks.com
+      # We explicitly deploy to /Workspace/Users/workwithsadibou@gmail.com to make sure we only have a single copy.
+      root_path: /Workspace/Users/workwithsadibou@gmail.com/.bundle/${bundle.name}/${bundle.target}
+    variables:
+      target_catalog: ${var.catalog_prod}
+    permissions:
+      - user_name: workwithsadibou@gmail.com
+        level: CAN_MANAGE

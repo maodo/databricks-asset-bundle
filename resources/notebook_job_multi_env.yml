@@ -1,0 +1,20 @@
+resources:
+  jobs:
+    demo03_job:
+      name: ${bundle.target}_demo3_dab_${workspace.current_user.short_name}
+      tasks:
+        - task_key: create_bronze_table
+          notebook_task:
+            notebook_path: ../src/notebooks/create_bronze_table.ipynb
+            source: WORKSPACE
+        - task_key: create_silver_table
+          depends_on:
+            - task_key: create_bronze_table
+          notebook_task:
+            notebook_path: ../src/notebooks/create_silver_table.ipynb
+            source: WORKSPACE
+      parameters:
+        - name: display_target
+          default: ${bundle.target}
+        - name: catalog_name
+          default: ${var.target_catalog}

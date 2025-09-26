@@ -1,0 +1,15 @@
+resources:
+  jobs:
+    lab02_job_maodo:
+      name: lab02_job_maodo
+      tasks:
+        - task_key: create_nyc_tables
+          notebook_task:
+            notebook_path: ../src/notebooks/our_project_code.ipynb
+            base_parameters:
+              display_target: development
+              catalog_name: dbacademy_1_dev
+            source: WORKSPACE
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
