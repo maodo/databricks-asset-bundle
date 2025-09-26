@@ -4,10 +4,10 @@ bundle:
   name: dab_test
   uuid: 0eb8fa21-280b-4dfc-996a-96ff2b9b10f8
 
-artifacts:
-  python_artifact:
-    type: whl
-    build: uv build --wheel
+# artifacts:
+#   python_artifact:
+#     type: whl
+#     build: uv build --wheel
 
 include:
   - resources/notebook_job_multi_env.yml
